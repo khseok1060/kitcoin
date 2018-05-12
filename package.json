@@ -6,5 +6,8 @@
   "repository": "https://github.com/khseok1060/kitcoin",
   "author": "Kwangho <khseok1060@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {
+    "crypto-js": "^3.1.9-1"
+  }
 }

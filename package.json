@@ -1,0 +1,10 @@
+{
+  "name": "kitcoin",
+  "version": "1.0.0",
+  "description": "Kitcoin, the most awesome coin made in NodeJS",
+  "main": "src/server.js",
+  "repository": "https://github.com/khseok1060/kitcoin",
+  "author": "Kwangho <khseok1060@gmail.com>",
+  "license": "MIT",
+  "private": false
+}

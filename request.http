@@ -9,3 +9,12 @@ content-type: application/json
 {
     "data": "Second block baby!!"
 }
+
+###
+
+POST http://localhost:3000/peers
+content-type: application/json 
+
+{
+    "peer": "ws://localhost:4000"
+}

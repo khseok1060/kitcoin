@@ -1,9 +1,11 @@
 const express = require("express"),
   bodyParser = require("body-parser"),
   morgan = require("morgan"),
-  Blockcahin = require('./blockchain');
+  Blockcahin = require('./blockchain'),
+  P2P = require('./p2p');
 
 const { getBlockchain, createNewBlock } = Blockcahin; 
+const { startP2PServer } = P2P;
 
 const PORT = process.env.HTTP_PORT || 3000;
 
@@ -22,4 +24,6 @@ app.post("/blocks", (req, res) => {
   res.send(newBlock);
 });
 
-app.listen(PORT, () => console.log(`Kitcoin Server running on ${PORT} ✅`));
+const server = app.listen(PORT, () => console.log(`Kitcoin HTTP Server running on port ${PORT} ✅`));
+
+startP2PServer(server);

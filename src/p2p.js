@@ -1,4 +1,40 @@
-const WebSockets = require("ws");
+const WebSockets = require("ws"),
+  Blockcahin = require("./blockchain");
+
+const { getLastBlock } = Blockcahin;
+
+// Messages Types
+const GET_LATEST = "GET_LATEST";
+const GET_ALL = "GET_ALL";
+const BLOCKCHAIN_RESPONSE = "BLOCKCHAIN_RESPONSE";
+
+// Message Creators
+const getLatest = () => {
+  return {
+    typs: GET_LATEST,
+    data: null
+  };
+};
+
+const getAll = () => {
+  return {
+    type: GET_ALL,
+    data: null
+  };
+};
+
+const blockchainResponse = (data) => {
+  return {
+    type: BLOCKCHAIN_RESPONSE,
+    data: data
+  };
+};
+
+const handleSocketMessages = ws => {
+  ws.on("message", data => {
+
+  });
+};
 
 const sockets = [];
 
@@ -12,13 +48,10 @@ const startP2PServer = server => {
   console.log("kitcoin P2P Server running");
 };
 
-const initSocketConnection = socket => {
-  sockets.push(socket);
-  handleSocketError(socket);
-  socket.on("message", data => {
-    console.log(data);
-  });
-  setTimeout(() => { socket.send("welcome"); }, 5000);
+const initSocketConnection = ws => {
+  sockets.push(ws);
+  handleSocketMessages(ws);
+  handleSocketError(ws);
 };
 
 const handleSocketError = ws => {

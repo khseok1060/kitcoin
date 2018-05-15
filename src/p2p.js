@@ -26,15 +26,35 @@ const getAll = () => {
 const blockchainResponse = (data) => {
   return {
     type: BLOCKCHAIN_RESPONSE,
-    data: data
+    data
   };
 };
 
+const parseData = data => {
+  try {
+    return JSON.parse(data);
+  } catch(e) {
+    console.log(e);
+    return null;
+  }
+}
+
 const handleSocketMessages = ws => {
   ws.on("message", data => {
-
+    const message = parseData(data);
+    if(message === null) {
+      return;
+    }
+    console.log(message);
+    switch(message.type) {
+      case GET_LATEST:
+        sendMessage(ws, getLastBlock());
+        break;
+    }
   });
 };
+
+const sendMessage = (ws, message) => ws.send(JSON.stringify(message));
 
 const sockets = [];
 
@@ -52,6 +72,7 @@ const initSocketConnection = ws => {
   sockets.push(ws);
   handleSocketMessages(ws);
   handleSocketError(ws);
+  sendMessage(ws, getLatest());
 };
 
 const handleSocketError = ws => {
@@ -61,7 +82,7 @@ const handleSocketError = ws => {
   };
   ws.on("close", () => closeSocketConnection(ws));
   ws.on("error", () => closeSocketConnection(ws));
-}
+};
 
 const connectToPeers = newPeer => {
   const ws = new WebSockets(newPeer);

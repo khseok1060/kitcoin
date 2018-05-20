@@ -85,12 +85,28 @@ const updateUTxOuts = (newTxs, uTxOutList) => {
 
 const isTxInStructureValid = txIn => {
   if (txIn === null) {
+    console.log("The txIn appears to be null");
     return false;
   } else if (typeof txIn.signature !== "string") {
+    console.log("The txIn doesn't have a valid signature");
     return false;
   } else if (typeof txIn.txOutId !== "string") {
+    console.log("The txIn doesn't have a valid txOutId");
     return false;
   } else if (typeof txIn.txOutIndex !== "number") {
+    console.log("The txIn doesn't have a valid txOutIndex");
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const isAddressValid = address => {
+  if (address.length !== 130) {
+    return false;
+  } else if (address.match("^[a-fA-F0-9]+$") === null) {
+    return false;
+  } else if (address.startsWith("04")) {
     return false;
   } else {
     return true;
@@ -98,7 +114,21 @@ const isTxInStructureValid = txIn => {
 };
 
 const isTxOutStructureValid = txOut => {
-
+  if (txOut === null) {
+    console.log("The txOut appears to be null");
+    return false;
+  } else if (typeof txOut.address !== "string") {
+    console.log("The txOut doesn't have a valid address");
+    return false;
+  } else if (!isAddressValid(txOut.address)) {
+    console.log("The txOut doesn't have a valid address");
+    return false;
+  } else if (typeof txOut.amount !== "number") {
+    console.log("The txOut doesn't have a valid amount");
+    return false;
+  } else {
+    return true;
+  }
 };
 
 const isTxStructureValid = tx => {

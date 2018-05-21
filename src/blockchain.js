@@ -4,7 +4,7 @@ const CryptoJS = require("crypto-js"),
   hexToBinary = require("hex-to-binary");
 
 const { getBalance, getPublicFromWallet } = Wallet;
-const { createCoinbaseTx } = Transactions;
+const { createCoinbaseTx, processTxs } = Transactions;
 
 const BLOCK_GENERATION_INTERVAL = 10;
 const DIFFICULTY_ADJUSTMENT_INTERVAL = 10;
@@ -25,7 +25,7 @@ const genesisBlock = new Block(
   0,
   '2C4CEB90344F20CC4C77D626247AED3ED530C1AEE3E6E85AD494498B17414CAC',
   null,
-  1520312194926, // 추후에 변경해야함. 타임스탬프 체크시에 오류발생. 최근것으로 변경
+  Math.round(new Date().getTime() / 1000) - 10, // 추후에 변경해야함. 타임스탬프 체크시에 오류발생. 최근것으로 변경
   "This is the genesis!!",
   0,
   0
@@ -182,7 +182,15 @@ const replaceChain = candidateChain => {
 
 const addBlockToChain = candidateBlock => {
   if(isBlockValid(candidateBlock, getNewestBlock())) {
-    getBlockchain().push(candidateBlock);
+    const processedTxs = processTxs(candidateBlock.data, uTxOuts, candidateBlock.index);
+    if (processedTxs === null) {
+      console.log("Couldn't process txs");
+      return false;
+    } else {
+      blockchain.push(candidateBlock);
+      uTxOuts = processedTxs;
+      return true;
+    }
     return true;
   } else {
     return false;

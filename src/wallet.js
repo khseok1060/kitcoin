@@ -6,19 +6,19 @@ const elliptic = require("elliptic").ec,
 
 const { getPublicKey, getTxId, signTxIn, TxIn, Transaction, TxOut } = Transactions;
 
-const ec = new elliptic.ec("secp256k1");
+const ec = new elliptic("secp256k1");
 
 const privateKeyLocation = path.join(__dirname, "privateKey");
 
 const generatePrivateKey = () => {
   const keyPair = ec.genKeyPair();
-  const privateKey = ec.getPrivate();
+  const privateKey = keyPair.getPrivate();
   return privateKey.toString(16);
 };
 
 const getPrivateFromWallet = () => {
-  const buffer = fs.readFileSync(privateKeyLocation, "utf-8");
-  buffer.toString();
+  const buffer = fs.readFileSync(privateKeyLocation, "utf8");
+  return buffer.toString();
 };
 
 const getBalance = (address, uTxOuts) => {
@@ -97,5 +97,7 @@ const createTx = (receiverAddress, amount, privateKey, uTxOutList) => {
 };
 
 module.exports = {
-  initWallet
+  initWallet,
+  getBalance,
+  getPublicFromWallet
 };

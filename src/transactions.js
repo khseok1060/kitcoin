@@ -1,8 +1,8 @@
 const CryptoJS = require("crypto-js"),
-  elliptic = require("elliptic"),
+  elliptic = require("elliptic").ec,
   utils = require("./utils");
 
-const ec = new elliptic.ec("secp256k1");
+const ec = new elliptic("secp256k1");
 
 const COINBASE_AMOUNT = 50;
 
@@ -34,8 +34,6 @@ class UTxOut {
     this.amount = amount;
   }
 }
-
-let uTxOuts = [];
 
 const getTxId = tx => {
   const txInContent = tx.txIns

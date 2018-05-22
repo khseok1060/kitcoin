@@ -5,7 +5,7 @@ const express = require("express"),
   P2P = require('./p2p'),
   Wallet = require('./wallet');
 
-const { getBlockchain, createNewBlock, getAccountBalance } = Blockcahin; 
+const { getBlockchain, createNewBlock, getAccountBalance, sendTx } = Blockcahin; 
 const { startP2PServer, connectToPeers } = P2P;
 const { initWallet } = Wallet;
 
@@ -36,6 +36,24 @@ app.get("/me/balance", (req, res) => {
   const balance = getAccountBalance();
   res.send({ balance });
 });
+
+app.route("/transactions")
+  .get((req, res) => {
+
+  })
+  .post((req, res) => {
+    try {
+      const { body: { address, amount } } = req;
+      if (address === undefined || amount === undefined) {
+        throw Error("Please specify address and amount");
+      } else {
+        const resPonse = sendTx(address, amount);
+        res.send(resPonse);
+      }
+    } catch(e) {
+      res.status(400).send(e.message);
+    }
+  })
 
 const server = app.listen(PORT, () => console.log(`Kitcoin HTTP Server running on port ${PORT} ✅`));
 

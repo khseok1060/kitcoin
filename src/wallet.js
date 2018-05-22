@@ -54,7 +54,7 @@ const findAmountInUTxOuts = (amountNeeded, myUTxOuts) => {
       return { includedUTxOuts, leftOverAmount };
     }
   }
-  console.log("Not enough funds");
+  throw Error("Not enough funds");
   return false;
 };
 
@@ -64,13 +64,13 @@ const createTxOuts = (receiverAddress, myAddress, amount, leftOverAmount) => {
     return [receiverTxOut];
   } else {
     const leftOverTxOut = new TxOut(myAddress, leftOverAmount);
-    return [receiverTxOut, leftOverAmount];
+    return [receiverTxOut, leftOverTxOut];
   }
 };
 
 const createTx = (receiverAddress, amount, privateKey, uTxOutList) => {
   const myAddress = getPublicKey(privateKey);
-  const myUTxOuts = uTxOutList.fliter(uTxO => uTxO.address === myAddress);
+  const myUTxOuts = uTxOutList.filter(uTxO => uTxO.address === myAddress);
 
   const { includedUTxOuts, leftOverAmount } = findAmountInUTxOuts(amount, myUTxOuts);
 
@@ -78,6 +78,7 @@ const createTx = (receiverAddress, amount, privateKey, uTxOutList) => {
     const txIn = new TxIn();
     txIn.txOutId = uTxOut.txOutId;
     txIn.txOutIndex = uTxOut.txOutIndex;
+    return txIn;
   };
 
   const unsignedTxIns = includedUTxOuts.map(toUnsignedTxIn);
